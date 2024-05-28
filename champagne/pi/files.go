@@ -121,7 +121,7 @@ func changeIP(ip *net.IPNet) error {
 		conn := "connection"
 		mod := "modify"
 		old_profile := "Wired connection 1"
-		new_profile := "byu-av"
+		new_profile := "ensign-av"
 		connid := "connection.id"
 		ipv4addName := "ipv4.address"
 		ipv4add := ip.String()
@@ -130,7 +130,7 @@ func changeIP(ip *net.IPNet) error {
 		ipv4methodName := "ipv4.method"
 		ipv4method := "manual"
 		ipv4dnsName := "ipv4.dns"
-		ipv4dns := "127.0.0.1,10.8.0.19,10.8.0.26"
+		ipv4dns := "127.0.0.1,10.11.196.11,10.8.0.19"
 
 		nmcmd := exec.Command(app, conn, mod, old_profile, connid, new_profile)
 		log.Printf("Command: %s\n", nmcmd.String())
@@ -181,7 +181,7 @@ func changeIP(ip *net.IPNet) error {
 		str.WriteString("\ninterface eth0\n")
 		str.WriteString(fmt.Sprintf("static ip_address=%s\n", ip.String()))
 		str.WriteString(fmt.Sprintf("static routers=%s\n", router.String()))
-		str.WriteString("static domain_name_servers=127.0.0.1 10.8.0.19 10.8.0.26\n")
+		str.WriteString("static domain_name_servers=127.0.0.1 10.11.196.11 10.8.0.26\n")
 
 		toWrite := str.String()
 		n, err := f.WriteString(toWrite)

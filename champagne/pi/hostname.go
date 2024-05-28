@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	Domain = ".byu.edu"
+	Domain = ".avhw.ensign.edu"
+	// Domain = ".byu.edu"
 )
 
 func setHostname(hn string, ignoreSubnet bool, useDHCP bool) error {
