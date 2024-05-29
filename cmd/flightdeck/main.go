@@ -7,12 +7,10 @@ import (
 	"net/http"
 
 	"github.com/byuoitav/auth/middleware"
-	"github.com/byuoitav/auth/wso2"
 	"github.com/byuoitav/flight-deck/internal/app/flightdeck/handlers"
 	"github.com/byuoitav/flight-deck/internal/app/flightdeck/opa"
 	"github.com/byuoitav/flight-deck/internal/pkg/ansible"
 	"github.com/gin-gonic/gin"
-	adapter "github.com/gwatts/gin-adapter"
 	"github.com/spf13/pflag"
 	"go.uber.org/zap"
 )
@@ -21,7 +19,7 @@ func MiddlewareWso2(log *zap.Logger) gin.HandlerFunc {
 
 	//client := wso2.New("", "", "https://api.byu.edu", "")
 	//authentic := client.JWTValidationMiddleware()
-	log.Debug("Getting JWT and testing")
+	//log.Debug("Getting JWT and testing")
 
 	return func(c *gin.Context) {
 
@@ -78,10 +76,10 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Recovery())
 
-	client := wso2.New("", "", "https://api.byu.edu", "")
+	//client := wso2.New("", "", "https://api.byu.edu", "")
 
 	r.GET("/healthz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"Success": "Flightdeck Standing By..."})
+		c.JSON(http.StatusOK, gin.H{"Success": "Deployment Server is Standing By..."})
 		return
 	})
 
@@ -92,7 +90,7 @@ func main() {
 
 	// WSO2 and OPA Middleware added to /api/v1
 	api := r.Group("/api/v1/")
-	api.Use(adapter.Wrap(client.JWTValidationMiddleware()))
+	//api.Use(adapter.Wrap(client.JWTValidationMiddleware()))
 	api.Use(MiddlewareWso2(log))
 	api.Use(o.Authorize(log))
 
