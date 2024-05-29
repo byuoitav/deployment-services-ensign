@@ -4,7 +4,7 @@ After=getty@tty2.service
 
 [Service]
 Type=oneshot
-ExecStart=/byu/pi-setup.sh
+ExecStart=/ensign/pi-setup.sh
 EnvironmentFile=/etc/environment
 StandardInput=tty
 TTYPath=/dev/tty2
