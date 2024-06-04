@@ -36,10 +36,10 @@ func MiddlewareWso2(log *zap.Logger) gin.HandlerFunc {
 
 func main() {
 	var (
-		port                int
-		logLevel            string
-		opaURL              string
-		opaToken            string
+		port     int
+		logLevel string
+		//opaURL              string
+		//opaToken            string
 		pathDeployPlaybook  string
 		pathRefloatPlaybook string
 		pathRebuildPlaybook string
