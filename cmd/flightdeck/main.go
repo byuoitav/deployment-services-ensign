@@ -19,7 +19,7 @@ func MiddlewareWso2(log *zap.Logger) gin.HandlerFunc {
 
 	//client := wso2.New("", "", "https://api.byu.edu", "")
 	//authentic := client.JWTValidationMiddleware()
-	//log.Debug("Getting JWT and testing")
+	log.Debug("Getting JWT and testing")
 
 	return func(c *gin.Context) {
 
@@ -91,8 +91,8 @@ func main() {
 	// WSO2 and OPA Middleware added to /api/v1
 	api := r.Group("/api/v1/")
 	//api.Use(adapter.Wrap(client.JWTValidationMiddleware()))
-	api.Use(MiddlewareWso2(log))
-	api.Use(o.Authorize(log))
+	//api.Use(MiddlewareWso2(log))
+	//api.Use(o.Authorize(log))
 
 	api.POST("/deploy/:deviceID", func(c *gin.Context) {
 		cCp := c.Copy()
