@@ -8,7 +8,6 @@ import (
 
 	"github.com/byuoitav/auth/middleware"
 	"github.com/byuoitav/flight-deck/internal/app/flightdeck/handlers"
-	"github.com/byuoitav/flight-deck/internal/app/flightdeck/opa"
 	"github.com/byuoitav/flight-deck/internal/pkg/ansible"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
@@ -50,8 +49,8 @@ func main() {
 
 	pflag.CommandLine.IntVarP(&port, "port", "P", 8080, "port to run the server on")
 	pflag.StringVarP(&logLevel, "log-level", "L", "", "level to log at. refer to https://godoc.org/go.uber.org/zap/zapcore#Level for options")
-	pflag.StringVarP(&opaURL, "opa-address", "a", "", "OPA Address Full URL")
-	pflag.StringVarP(&opaToken, "opa-token", "t", "", "OPA Token")
+	//pflag.StringVarP(&opaURL, "opa-address", "a", "", "OPA Address Full URL")
+	//pflag.StringVarP(&opaToken, "opa-token", "t", "", "OPA Token")
 	pflag.StringVarP(&pathDeployPlaybook, "deploy-playbook", "", "", "path to the ansible deployment playbook")
 	pflag.StringVarP(&pathRefloatPlaybook, "refloat-playbook", "", "", "path to the ansible refloat playbook")
 	pflag.StringVarP(&pathRebuildPlaybook, "rebuild-playbook", "", "", "path to the ansible rebuild playbook")
@@ -83,11 +82,12 @@ func main() {
 		return
 	})
 
-	o := opa.Client{
-		URL:   opaURL,
-		Token: opaToken,
-	}
-
+	/*
+		o := opa.Client{
+			URL:   opaURL,
+			Token: opaToken,
+		}
+	*/
 	// WSO2 and OPA Middleware added to /api/v1
 	api := r.Group("/api/v1/")
 	//api.Use(adapter.Wrap(client.JWTValidationMiddleware()))
