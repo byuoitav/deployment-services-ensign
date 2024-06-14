@@ -15,7 +15,7 @@ import (
 func fixTime() error {
 	log.Printf("Fixing time (current time: %s)", time.Now())
 
-	cmd := exec.Command("ntpdate", "tick.byu.edu")
+	cmd := exec.Command("ntpdate", "time.nist.gov")
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	if err := cmd.Run(); err != nil {

@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	DeployURL      = "http://sandbag.byu.edu:2002/deploy"
+	DeployURL      = "http://ansible.av.ensign.edu:8080/deploy/"
 	DeploymentFile = "/tmp/deployment.log"
 )
 
@@ -100,7 +100,7 @@ func ansible_deploy(hostname string) error {
 	data.Unlock()
 
 	// Creating new Post Request to start ansible deployment
-	req, err := http.NewRequestWithContext(context.TODO(), http.MethodPost, DeployURL, nil)
+	req, err := http.NewRequestWithContext(context.TODO(), http.MethodPost, DeployURL+hostname, nil)
 	if err != nil {
 		return fmt.Errorf("failed to deploy: %w", err)
 	}
