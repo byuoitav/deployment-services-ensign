@@ -4,10 +4,10 @@ sleep 5
 chvt 2
 
 #update so the pi won't crash after deployment
-apt update
-apt upgrade -y
-apt autoremove -y
-apt autoclean -y
+#apt update
+#apt upgrade -y
+#apt autoremove -y
+#apt autoclean -y
 
 # try to download the setup script
 until $(curl --insecure https://raw.githubusercontent.com/byuoitav/deployment-services-ensign/master/files/setup.sh > /tmp/setup.sh); do
