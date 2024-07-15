@@ -50,28 +50,28 @@ func updateAndReboot() error {
 	cmd := exec.Command("apt", "update")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		// for now, we are just going to ignore errors here
-		data.Lock()
-		data.ProgressPercent = 40
-		data.ProgressMessage = fmt.Sprintf("upgrading packages, but there was an error updating apt: %s", err)
-		data.Unlock()
-	} else {
-		data.Lock()
-		data.ProgressPercent = 30
-		data.ProgressMessage = "upgrading packages"
-		data.Unlock()
-	}
+	// if err := cmd.Run(); err != nil {
+	// 	// for now, we are just going to ignore errors here
+	// 	data.Lock()
+	// 	data.ProgressPercent = 40
+	// 	data.ProgressMessage = fmt.Sprintf("upgrading packages, but there was an error updating apt: %s", err)
+	// 	data.Unlock()
+	// } else {
+	// 	data.Lock()
+	// 	data.ProgressPercent = 30
+	// 	data.ProgressMessage = "upgrading packages"
+	// 	data.Unlock()
+	// }
 
 	log.Printf("\nUpgrading packages")
 
 	// upgrade packages
 	// cmd = exec.Command("apt", "-y", "upgrade")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to run %q: %w", "apt -y upgrade", err)
-	}
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// if err := cmd.Run(); err != nil {
+	// 	return fmt.Errorf("failed to run %q: %w", "apt -y upgrade", err)
+	// }
 
 	log.Printf("\nRemoving leftover packages")
 
@@ -82,13 +82,13 @@ func updateAndReboot() error {
 
 	// remove/clean leftover junk
 	// cmd = exec.Command("apt", "-y", "autoremove")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to run %q: %w", "apt -y autoremove", err)
-	}
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// if err := cmd.Run(); err != nil {
+	// 	return fmt.Errorf("failed to run %q: %w", "apt -y autoremove", err)
+	// }
 
-	log.Printf("\nCleaning apt cache")
+	// log.Printf("\nCleaning apt cache")
 
 	data.Lock()
 	data.ProgressPercent = 90
@@ -96,11 +96,11 @@ func updateAndReboot() error {
 	data.Unlock()
 
 	// cmd = exec.Command("apt", "-y", "autoclean")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("failed to run %q: %w", "apt -y autoclean", err)
-	}
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
+	// if err := cmd.Run(); err != nil {
+	// 	return fmt.Errorf("failed to run %q: %w", "apt -y autoclean", err)
+	// }
 
 	log.Printf("\n\n\nDone! Rebooting!!")
 	data.Lock()
