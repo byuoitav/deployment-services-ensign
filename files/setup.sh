@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #immediately update the pi to overcome crashing 
-apt update
-apt upgrade -y
-apt autoremove -y
-apt autoclean -y
+# apt update
+# apt upgrade -y
+# apt autoremove -y
+# apt autoclean -y
 
 echo ""
 echo "Hi From Danny"
