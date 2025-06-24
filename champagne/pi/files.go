@@ -16,16 +16,17 @@ import (
 )
 
 const (
-	HostnameFile = "/etc/hostname"
-	DHCPFile     = "/etc/dhcpcd.conf"
-	HostsFile    = "/etc/hosts"
-	ReleaseFile  = "/etc/os-release"
+	// HostnameFile = "/etc/hostname"
+	DHCPFile = "/etc/dhcpcd.conf"
+	// HostsFile    = "/etc/hosts"
+	ReleaseFile = "/etc/os-release"
 )
 
 func ReadOSReleaseInfo(configfile string) map[string]string {
 	cfg, err := ini.Load(configfile)
 	if err != nil {
-		fmt.Errorf("Fail to read file: ", err)
+		log.Printf("Fail to read file: %v", err)
+		return make(map[string]string)
 	}
 
 	ConfigParams := make(map[string]string)
@@ -57,36 +58,57 @@ func waitForFile(ctx context.Context, name string, checkForContent bool) error {
 	}
 }
 
+// func changeHostname(hn string) error {
+// 	f, err := os.Create(HostnameFile)
+// 	if err != nil {
+// 		return fmt.Errorf("failed to open file %q: %w", HostnameFile, err)
+// 	}
+// 	defer f.Close()
+
+// 	n, err := f.WriteString(hn)
+// 	switch {
+// 	case err != nil:
+// 		return fmt.Errorf("failed to write: %w", err)
+// 	case len(hn) != n:
+// 		return fmt.Errorf("failed to write: wrote %v/%v bytes", n, len(hn))
+// 	}
+
+// 	// update /etc/hosts
+// 	hostsFile, err := os.OpenFile(HostsFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+// 	if err != nil {
+// 		return fmt.Errorf("failed to open file %q: %w", HostsFile, err)
+// 	}
+// 	defer hostsFile.Close()
+
+// 	toWrite := fmt.Sprintf("\n127.0.0.1\t%s", hn)
+// 	n, err = hostsFile.WriteString(toWrite)
+// 	switch {
+// 	case err != nil:
+// 		return fmt.Errorf("failed to write: %w", err)
+// 	case len(toWrite) != n:
+// 		return fmt.Errorf("failed to write: wrote %v/%v bytes", n, len(toWrite))
+// 	}
+
+// 	return nil
+// }
+
 func changeHostname(hn string) error {
-	f, err := os.Create(HostnameFile)
+	// Set the hostname using hostnamectl
+	hnset := exec.Command("sudo", "hostnamectl", "set-hostname", hn)
+	log.Printf("Command: %s\n", hnset.String())
+
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	hnset.Stdout = &out
+	hnset.Stderr = &stderr
+
+	err := hnset.Run()
 	if err != nil {
-		return fmt.Errorf("failed to open file %q: %w", HostnameFile, err)
+		log.Printf(fmt.Sprintf(err.Error()) + ":" + stderr.String())
+		log.Printf("Failed to run command: %v\n", err.Error())
+		return fmt.Errorf("Failed to run command: %v", err.Error())
 	}
-	defer f.Close()
-
-	n, err := f.WriteString(hn)
-	switch {
-	case err != nil:
-		return fmt.Errorf("failed to write: %w", err)
-	case len(hn) != n:
-		return fmt.Errorf("failed to write: wrote %v/%v bytes", n, len(hn))
-	}
-
-	// update /etc/hosts
-	hostsFile, err := os.OpenFile(HostsFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return fmt.Errorf("failed to open file %q: %w", HostsFile, err)
-	}
-	defer hostsFile.Close()
-
-	toWrite := fmt.Sprintf("\n127.0.0.1\t%s", hn)
-	n, err = hostsFile.WriteString(toWrite)
-	switch {
-	case err != nil:
-		return fmt.Errorf("failed to write: %w", err)
-	case len(toWrite) != n:
-		return fmt.Errorf("failed to write: wrote %v/%v bytes", n, len(toWrite))
-	}
+	log.Printf("Output: %v\n", out.String())
 
 	return nil
 }
@@ -98,12 +120,11 @@ func changeIP(ip *net.IPNet) error {
 	// Starting with bookworm, debian/raspbian started using network manager
 	// We are only deploying Bookworm from here on out but we want a way to fall back for a little bit
 	var err error
-
 	OSReleaseInfo := ReadOSReleaseInfo(ReleaseFile)
 	OSRelease := OSReleaseInfo["VERSION_ID"]
 	OSReleaseFloat, err := strconv.ParseFloat(OSRelease, 64)
 	if err != nil {
-		fmt.Errorf("Failed to convert OS Release version from string to float: %v\n", err.Error())
+		return fmt.Errorf("Failed to convert OS Release version from string to float: %v", err.Error())
 	}
 
 	OSReleaseInt := int(OSReleaseFloat)

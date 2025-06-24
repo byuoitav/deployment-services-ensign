@@ -152,11 +152,10 @@ func resetData() {
 
 func serveHTMLHandler(c echo.Context) error {
 	pageName := path.Base(c.Request().URL.Path)
-
 	data.Lock()
 	defer data.Unlock()
 
-	err := c.Render(http.StatusOK, pageName+".html", data)
+	err := c.Render(http.StatusOK, pageName+".html", &data)
 	if err != nil {
 		log.Printf("error rendering template %s: %v", pageName, err)
 	}

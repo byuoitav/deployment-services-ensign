@@ -47,9 +47,9 @@ func updateAndReboot() error {
 	log.Printf("Updating apt")
 
 	// update apt
-	cmd := exec.Command("apt", "update")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	// cmd := exec.Command("apt", "update")
+	// cmd.Stdout = os.Stdout
+	// cmd.Stderr = os.Stderr
 	// if err := cmd.Run(); err != nil {
 	// 	// for now, we are just going to ignore errors here
 	// 	data.Lock()

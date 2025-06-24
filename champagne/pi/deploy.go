@@ -88,7 +88,7 @@ func ansible_deploy(hostname string) error {
 	if _, err := os.Stat("/tmp/error.log"); err == nil {
 		err := os.Remove("/tmp/error.log")
 		if err != nil {
-			fmt.Errorf("Failed to remove error file")
+			return fmt.Errorf("failed to remove error file: %w", err)
 		}
 	}
 
@@ -126,7 +126,7 @@ func ansible_deploy(hostname string) error {
 			var final string
 			logFile, err := os.ReadFile("/tmp/error.log")
 			if err != nil {
-				fmt.Errorf("Error Reading File: %s", err.Error())
+				return fmt.Errorf("error reading error log file: %w", err)
 			}
 			//eep := errorParser(string(logFile))
 			lines := strings.Split(string(logFile), "\n")
@@ -146,28 +146,24 @@ func ansible_deploy(hostname string) error {
 				}
 			}
 			return fmt.Errorf("Failed to deploy: %s", final)
-			break
 		}
 		//log.Printf("No Error.log detected, Waiting 10 seconds")
 		time.Sleep(5 * time.Second)
 
 	}
-
-	switch resp.StatusCode {
-	case http.StatusOK:
-		log.Printf("Waiting for deployment to finish.....")
-		return nil
-	case http.StatusForbidden:
-		return fmt.Errorf("failed to deploy: %w", ErrDeviceNotFound)
-	case http.StatusNotFound:
-		return fmt.Errorf("failed to deploy: %s", buf)
-	case http.StatusInternalServerError:
-		return fmt.Errorf("failed to deploy: unknown error: %s", buf)
-	default:
-		return fmt.Errorf("failed to deploy: unknown status code %d: %s", resp.StatusCode, buf)
-	}
-
-	return nil
+	// switch resp.StatusCode {
+	// case http.StatusOK:
+	// 	log.Printf("Waiting for deployment to finish.....")
+	// 	return nil
+	// case http.StatusForbidden:
+	// 	return fmt.Errorf("failed to deploy: %w", ErrDeviceNotFound)
+	// case http.StatusNotFound:
+	// 	return fmt.Errorf("failed to deploy: %s", buf)
+	// case http.StatusInternalServerError:
+	// 	return fmt.Errorf("failed to deploy: unknown error: %s", buf)
+	// default:
+	// 	return fmt.Errorf("failed to deploy: unknown status code %d: %s", resp.StatusCode, buf)
+	// }
 }
 
 func finishDeployment() error {
